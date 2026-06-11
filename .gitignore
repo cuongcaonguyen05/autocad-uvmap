@@ -1,0 +1,38 @@
+# ============================================================
+#  Visual Studio / C++ (ObjectARX) build artifacts
+# ============================================================
+
+## Visual Studio - thư mục & file người dùng / IDE cache
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Build output của project (thư mục tên đúng 'x64' / 'Win32'
+## -> KHÔNG trùng 'inc-x64', 'lib-x64' (ObjectARX) hay 'x86_64' (xatlas))
+x64/
+Win32/
+
+## File trung gian / sản phẩm biên dịch (regenerable)
+*.pch
+*.ipch
+*.obj
+*.pdb
+*.idb
+*.ilk
+*.exp
+*.tlog
+*.log
+*.lastbuildstate
+*.recipe
+*.FileListAbsolute.txt
+*.tmp
+Thumbs.db
+
+# ============================================================
+#  ObjectARX: SDK độc quyền của Autodesk -> KHÔNG commit (license cấm
+#  phân phối lại). Người dùng tự tải về đặt vào ObjectARX/2022/.
+#  Bỏ qua toàn bộ thư mục.
+# ============================================================
+/ObjectARX/

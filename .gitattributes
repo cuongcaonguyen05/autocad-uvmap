@@ -1,0 +1,7 @@
+# Mặc định: Git tự nhận diện text & chuẩn hóa LF trong repo (diff đẹp cho source).
+* text=auto
+
+# Code thứ 3 đưa kèm (vendored): giữ nguyên byte, KHÔNG đổi line-ending
+# -> tránh "sửa" file vendor và bớt cảnh báo LF/CRLF.
+ObjectARX/** -text
+xatlas/**    -text

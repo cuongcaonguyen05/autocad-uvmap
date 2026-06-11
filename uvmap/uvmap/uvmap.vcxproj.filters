@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="UVMap">
+      <UniqueIdentifier>{a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AutoCadLib">
+      <UniqueIdentifier>{b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB">
+      <UniqueIdentifier>{c3d4e5f6-a7b8-4c9d-8e0f-2a3b4c5d6e7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GE">
+      <UniqueIdentifier>{d4e5f6a7-b8c9-4d0e-9f1a-3b4c5d6e7f80}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="uvmap_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IFeature.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FeatureManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SampleFeature.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UVMap\AutoCadUVMap.h">
+      <Filter>UVMap</Filter>
+    </ClInclude>
+    <ClInclude Include="UVMap\JsonAdapter.h">
+      <Filter>UVMap</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoCadLib\CAcadUtil.h">
+      <Filter>AutoCadLib</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoCadLib\CGeometryUtil.h">
+      <Filter>AutoCadLib</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoCadLib\AcadOpenForWrite.h">
+      <Filter>AutoCadLib</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonDefined.h">
+      <Filter>AutoCadLib</Filter>
+    </ClInclude>
+    <ClInclude Include="AcDbQuadrangle2d.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="AcDbTriangle.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="AcDbUVFace.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="AcDbUVGrid.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="AcDbUVMap.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="C3dFaceJson.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="GeoJson.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadWriteJson.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="AcGeQuadrangle2d.h">
+      <Filter>GE</Filter>
+    </ClInclude>
+    <ClInclude Include="AcGeTriangle.h">
+      <Filter>GE</Filter>
+    </ClInclude>
+    <ClInclude Include="AcGeUVFace.h">
+      <Filter>GE</Filter>
+    </ClInclude>
+    <ClInclude Include="AcGeUVGrid.h">
+      <Filter>GE</Filter>
+    </ClInclude>
+    <ClInclude Include="AcGeUVMap.h">
+      <Filter>GE</Filter>
+    </ClInclude>
+    <ClInclude Include="CvGePolygon2D.h">
+      <Filter>GE</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="uvmap_api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FeatureManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UVMap\AutoCadUVMap.cpp">
+      <Filter>UVMap</Filter>
+    </ClCompile>
+    <ClCompile Include="UVMap\JsonAdapter.cpp">
+      <Filter>UVMap</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoCadLib\CAcadUtil.cpp">
+      <Filter>AutoCadLib</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoCadLib\CGeometryUtil.cpp">
+      <Filter>AutoCadLib</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoCadLib\AcadOpenForWrite.cpp">
+      <Filter>AutoCadLib</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonDefined.cpp">
+      <Filter>AutoCadLib</Filter>
+    </ClCompile>
+    <ClCompile Include="AcDbQuadrangle2d.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="AcDbTriangle.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="AcDbUVFace.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="AcDbUVGrid.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="AcDbUVMap.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="C3dFaceJson.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="GeoJson.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadWriteJson.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="AcGeQuadrangle2d.cpp">
+      <Filter>GE</Filter>
+    </ClCompile>
+    <ClCompile Include="AcGeTriangle.cpp">
+      <Filter>GE</Filter>
+    </ClCompile>
+    <ClCompile Include="AcGeUVFace.cpp">
+      <Filter>GE</Filter>
+    </ClCompile>
+    <ClCompile Include="AcGeUVGrid.cpp">
+      <Filter>GE</Filter>
+    </ClCompile>
+    <ClCompile Include="AcGeUVMap.cpp">
+      <Filter>GE</Filter>
+    </ClCompile>
+    <ClCompile Include="CvGePolygon2D.cpp">
+      <Filter>GE</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
