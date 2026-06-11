@@ -1,4 +1,3 @@
-// AutoCadUVMap.h : Tính năng sinh toạ độ UV cho đối tượng AutoCAD.
 #pragma once
 
 #include "pch.h"

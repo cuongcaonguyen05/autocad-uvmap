@@ -1,16 +1,9 @@
-// AutoCadUVMap.cpp : Hiện thực tính năng AutoCadUVMap.
-// Các header ObjectARX (AcGePoint3d, AcDbEntity, AcDbPolyline, _T...) đã nằm trong pch.h.
 #include "pch.h"
 #include "AutoCadUVMap.h"
 #include "AcDbUVMap.h"
 #include "AcDbUVGrid.h"
 #include "JsonAdapter.h"
 #include "ReadWriteJson.h"
-// --- Header các class/hàm riêng của bạn: bổ sung đúng đường dẫn ---
-// #include "CAcDbAlignmentObject.h"  // CAcDbAlignmentObject
-// #include "CAcDbUVMap.h"            // CAcDbUVMap
-// #include "CAcDbUVGrid.h"           // CAcDbUVGrid
-// và khai báo hàm getDouble(...)
 
 AutoCadUVMap::AutoCadUVMap()
 {

@@ -1,4 +1,3 @@
-// C3dFaceJson.cpp : Hiện thực C3dFaceJson.
 #include "pch.h"
 #include "C3dFaceJson.h"
 #include <locale>

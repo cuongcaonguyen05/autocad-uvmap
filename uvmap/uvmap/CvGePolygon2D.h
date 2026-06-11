@@ -1,17 +1,4 @@
-﻿/**
-* CvGePolygon2D - phiên bản standalone tách từ AdsCivil (cvgeclass.h)
-*
-* Gồm 3 class tối thiểu, tự chứa (không phụ thuộc DTM / ObjectARX):
-*   CvGePoint2D     - đỉnh 2D (x, y)
-*   CvGePolyline2D  - chuỗi đỉnh, bọc std::list<CvGePoint2D>
-*   CvGePolygon2D   - đa giác (kế thừa CvGePolyline2D)
-*
-* Cách dùng export DLL (tùy chọn):
-*   - Project build DLL chứa file này:  #define CVGE_EXPORT_API __declspec(dllexport)
-*   - Project dùng DLL:                 #define CVGE_EXPORT_API __declspec(dllimport)
-*   - Build static / dùng trực tiếp:    không define gì (mặc định rỗng).
-*/
-#pragma once
+﻿#pragma once
 
 #include <list>
 

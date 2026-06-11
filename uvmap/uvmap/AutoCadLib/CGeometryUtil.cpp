@@ -1,4 +1,3 @@
-// CGeometryUtil.cpp : Hiện thực các hàm tính toán hình học dùng chung.
 #include "pch.h"
 #include "CGeometryUtil.h"
 

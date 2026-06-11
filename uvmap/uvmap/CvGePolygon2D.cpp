@@ -1,7 +1,4 @@
-﻿/**
-* CvGePolygon2D - phiên bản standalone tách từ AdsCivil (cvgeclass.cpp)
-*/
-#include "pch.h"
+﻿#include "pch.h"
 #include "CvGePolygon2D.h"
 
 #include <math.h>
