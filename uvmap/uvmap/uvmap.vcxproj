@@ -114,7 +114,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;UVMAP_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);..\..\ObjectARX\2022\inc;..\..\ObjectARX\2022\inc-x64;..\..\xatlas\source\xatlas;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);..\..\ObjectARX\2022\inc;..\..\ObjectARX\2022\inc-x64;..\..\ObjectARX\2022\utils\brep\inc;..\..\xatlas\source\xatlas;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -122,8 +122,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>..\..\ObjectARX\2022\lib-x64;..\..\xatlas\build\vs2019\bin\x86_64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>rxapi.lib;acge24.lib;acdb24.lib;accore.lib;acad.lib;ac1st24.lib;AcPal.lib;xatlas_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\ObjectARX\2022\lib-x64;..\..\ObjectARX\2022\utils\brep\lib-x64;..\..\xatlas\build\vs2019\bin\x86_64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>rxapi.lib;acge24.lib;acdb24.lib;accore.lib;acad.lib;ac1st24.lib;AcPal.lib;acbr24.lib;acgex24.lib;acgeoment.lib;xatlas_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -134,7 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;UVMAP_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);..\..\ObjectARX\2022\inc;..\..\ObjectARX\2022\inc-x64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);..\..\ObjectARX\2022\inc;..\..\ObjectARX\2022\inc-x64;..\..\ObjectARX\2022\utils\brep\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -142,8 +142,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>..\..\ObjectARX\2022\lib-x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>rxapi.lib;acge24.lib;acdb24.lib;accore.lib;acad.lib;ac1st24.lib;AcPal.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\ObjectARX\2022\lib-x64;..\..\ObjectARX\2022\utils\brep\lib-x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>rxapi.lib;acge24.lib;acdb24.lib;accore.lib;acad.lib;ac1st24.lib;AcPal.lib;acbr24.lib;acgex24.lib;acgeoment.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

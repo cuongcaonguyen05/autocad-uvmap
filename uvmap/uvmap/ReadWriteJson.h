@@ -22,7 +22,19 @@ namespace vizDatabase
 		bool mapQuadrangleTran(std::list<CAcGeUVGrid*>& lstGeUVGrip, std::list<CAcGeUVGrid*>& lstGeUVGripTran, AcGeVector2d& vecTran);
 		bool getTexCoordsWithGrip(CGeoJson*& geo, std::list<CAcGeUVGrid*>& lstGeUVGrip, const double& width, const double& height);
 		bool getTexCoordsWithMap(CGeoJson*& geo, std::map<int, std::list<CAcGeQuadrangle2d*>>& mapGeQuadrangle, const double& width, const double& height);
-
+		void meshWithCoord(std::list<CGeoJson*>& lstGeo, const double& dWidth, const double& dHeight);
+		void meshNoCoord(std::list<CGeoJson*>& lstGeo, const double& dWidth, const double& dHeight, std::list<AcGePoint3d>& lstP3d, std::list<AcGePoint2d>& lstP2d);
+		void meshUnwrap(const std::vector<float>& vecPosition,
+			const std::vector<float>& lstTextcoord,
+			const std::vector<unsigned int>& lstIndice,
+			std::list<AcGePoint3d>& inputPoint3d,
+			std::list<AcGePoint3d>& inputPoint2d);
+		void meshGetScale(const std::list<AcGePoint3d>& inputPoint3d,
+			const std::list<AcGePoint3d>& inputPoint2d,
+			double& dScale);
+		void meshDataToGeoJson(std::list<AcGePoint3d> lstP3d,
+			std::list<AcGePoint2d> lstP2d,
+			const double dWidth, const double dHeight);
 	public:
 		static CReadWriteJson* create();
 		CReadWriteJson();
@@ -33,5 +45,6 @@ namespace vizDatabase
 
 		bool append(CGeoJson* geo);
 		bool surfaceUVMap(std::list<CAcGeUVGrid*>& lstGeUVGrip, const double& width, const double& height);
+		bool meshUVMap(const double& width, const double& height);
 	};
 }

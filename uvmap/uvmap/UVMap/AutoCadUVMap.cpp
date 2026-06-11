@@ -73,9 +73,6 @@ void AutoCadUVMap::uvmapFollowPath()
 
 void AutoCadUVMap::modelSurfaceGeometryData(std::list<CAcDbUVMap*>& lstDbUVMap)
 {
-	// đọc toàn bộ data geometry của các đối tượng trong AutoCAD, lưu vào objectIds - và sử dụng CAcDbUVMap đã được tạo ở hàm modelSurfaceGeometryData
-	// hàm này dành cho suface 3 đỉnh(tam giác) để mapping uv - data > 4 đỉnh cần convert sang tam giác trước khi mapping uv
-
 	CAcadOpenForWrite opw;
 	std::list<AcDbEntity*> objectIds;
 	AcDbDatabase* database = acDocManager->curDocument()->database();
@@ -123,4 +120,45 @@ void AutoCadUVMap::modelSurfaceGeometryData(std::list<CAcDbUVMap*>& lstDbUVMap)
 
 	delete jsonAdapter;
 	delete geoJson;
+}
+
+void AutoCadUVMap::modelSolidGeometryData(std::list<CAcDbUVMap*>& lstDbUVMap) {
+	CAcadOpenForWrite opw;
+	std::list<AcDbEntity*> objectIds;
+	AcDbDatabase* database = acDocManager->curDocument()->database();
+	if (!database)
+		database = acdbHostApplicationServices()->workingDatabase();
+
+	if (!database)
+		return;
+
+	if (!CAcadUtil::GetInstance()->scanAllDatabase(objectIds, database))
+		return;
+
+	CJsonAdapter* jsonAdapter = CJsonAdapter::create();
+	vizDatabase::CReadWriteJson* geoJson = vizDatabase::CReadWriteJson::create();
+	bool bCatch = false;
+
+	std::list<AcDbEntity*>::iterator ite = objectIds.begin();
+	for (; ite != objectIds.end(); ite++)
+	{
+		AcDbEntity* pEnt = *ite;
+		if (!pEnt)
+			continue;
+
+		if (!pEnt->isKindOf(AcDb3dSolid::desc()))
+			continue;
+
+		jsonAdapter->exportEntity(pEnt, geoJson);
+		bCatch = true;
+	}
+
+	if (bCatch) {
+		double dWidth = 1, dHeight = 1; // tỉ lệ uv 1-1
+		geoJson->meshUVMap(dWidth, dHeight);
+	}
+
+	delete jsonAdapter;
+	delete geoJson;
+	return;
 }

@@ -21,4 +21,6 @@ public:
 	unsigned long hash(unsigned char* str, unsigned long __hash);
 	unsigned long whash(const TCHAR* str);
 	bool scanAllDatabase(std::list<AcDbEntity*>& ObjectIds, AcDbDatabase* pDb);
+	AcDbEntity* GetEntytifromObjectID(const AcDbObjectId& lID, AcDb::OpenMode objOpenMode = AcDb::kForWrite, AcRxClass* type = AcDbEntity::desc());
+	AcDbEntity* xrefGetEntytifromObjectID(const AcDbObjectId& lID, AcDb::OpenMode objOpenMode = AcDb::kForWrite, AcRxClass* type = AcDbEntity::desc());
 };

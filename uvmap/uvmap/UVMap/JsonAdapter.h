@@ -16,6 +16,7 @@ public:
     void exportEntity(AcDbEntity* pEnt, vizDatabase::CReadWriteJson* prwJson);
     void face3dJson(AcDbEntity* acdbFace, vizDatabase::CReadWriteJson* geoJson);
     void getListUVFaceWithXatlas(AcDbFace*& dbFace, std::list<vizDatabase::CGeoJson*>& listGeoJson);
+    void solidJson(AcDbEntity* acdbSolid, vizDatabase::CReadWriteJson* geoJson);
 
     bool entityIsOutlier(AcDbEntity* pEnt);
     bool face3dJsonEx(AcDbEntity* acdbFace, std::list<vizDatabase::CGeoJson*>& listGeoJson);

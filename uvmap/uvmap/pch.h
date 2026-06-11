@@ -24,6 +24,7 @@
 #include "acdb.h"           // kiểu cơ bản (AcDbObjectId...)
 #include "dbmain.h"         // AcDbEntity, AcDbObject + RTTI (desc/cast/isKindOf)
 #include "dbents.h"         // các entity (AcDbLine, AcDbCircle...)
+#include "dbsol3d.h"        // AcDb3dSolid (3D solid)
 #include "dbpl.h"           // AcDbPolyline
 #include "dbproxy.h"        // AcDbProxyEntity (cờ kEraseAllowed... cho ACRX_DXF_DEFINE_MEMBERS)
 #include "dbsymtb.h"        // bảng ký hiệu (BlockTable, LayerTable...)
@@ -38,6 +39,14 @@
 #include "dbxline.h"        // CView*, CMDIFrameWnd* (acedGetAcadDwgView()...)
 #include "dbray.h"        // CView*, CMDIFrameWnd* (acedGetAcadDwgView()...)
 #include "dbxutil.h"        // CView*, CMDIFrameWnd* (acedGetAcadDwgView()...)
+
+// ===== BRep API (ObjectARX\2022\utils\brep\inc) — dùng cho AcBr* trong solidJson =====
+#include "brbrep.h"        // AcBrBrep
+#include "brmesh2d.h"      // AcBrMesh2d, AcBrMesh2dFilter, namespace brep
+#include "brm2dctl.h"      // AcBrMesh2dControl (điều khiển chia lưới)
+#include "brmetrav.h"      // AcBrMesh2dElement2dTraverser
+#include "brentrav.h"      // AcBrElement2dNodeTraverser
+#include "brnode.h"        // AcBrNode
 // =====================================================
 
 // ===== Tiện ích dùng chung toàn project (đặt SAU ObjectARX) =====

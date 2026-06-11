@@ -354,3 +354,71 @@ bool CAcadUtil::scanAllDatabase(std::list<AcDbEntity*>& ObjectIds, AcDbDatabase*
 	}
 	return true;
 }
+
+AcDbEntity* CAcadUtil::GetEntytifromObjectID(const AcDbObjectId& lID, AcDb::OpenMode objOpenMode, AcRxClass* type)
+{
+	if (!lID || !lID.isValid())
+		return NULL;
+
+	AcDbEntity* pEnt = NULL;
+	if (type != AcDbEntity::desc()) {
+		AcDbEntity* pEnt = this->xrefGetEntytifromObjectID(lID, objOpenMode, type);
+		if (pEnt) {
+			if (objOpenMode == AcDb::OpenMode::kForRead) {
+				pEnt->close();
+			}
+			return pEnt;
+		}
+	}
+
+	Acad::ErrorStatus es = acdbOpenAcDbEntity(pEnt, lID, objOpenMode);
+	if (es == Acad::eOk)
+	{
+		if (objOpenMode == AcDb::OpenMode::kForRead) {
+			pEnt->close();
+		}
+		return	pEnt;
+	}
+	else return NULL;
+}
+
+AcDbEntity* CAcadUtil::xrefGetEntytifromObjectID(const AcDbObjectId& lID, AcDb::OpenMode objOpenMode, AcRxClass* type)
+{
+	AcDbDatabase* pWorkingDB = acDocManager->curDocument()->database();
+	if (!pWorkingDB) { pWorkingDB = acdbHostApplicationServices()->workingDatabase(); }
+	AcDbEntity* dbEnt = NULL;
+	AcDbXrefGraph graph;
+	if (acedGetCurDwgXrefGraph(graph) == Acad::eOk)
+	{
+		int numNodes = graph.numNodes();
+		for (int i = 0; i < numNodes; ++i)
+		{
+			AcDbXrefGraphNode* node = graph.xrefNode(i);
+			if (node == NULL)
+			{
+				continue;
+			}
+
+			// get the xref database
+			AcDbDatabase* xrefDb = node->database();
+			if (xrefDb == NULL || xrefDb == pWorkingDB)
+			{
+				continue;
+			}
+
+			acdbHostApplicationServices()->setWorkingDatabase(xrefDb);
+			Acad::ErrorStatus es = acdbOpenAcDbEntity(dbEnt, lID, objOpenMode);
+			if (dbEnt)
+			{
+				if (dbEnt->isKindOf(type))
+				{
+					break;
+				}
+				dbEnt->close();
+				dbEnt = NULL;
+			}
+		}
+	}
+	acdbHostApplicationServices()->setWorkingDatabase(pWorkingDB);
+	return dbEnt;
+}

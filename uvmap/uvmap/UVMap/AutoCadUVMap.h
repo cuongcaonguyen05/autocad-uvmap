@@ -19,4 +19,5 @@ public:
 	// ----- Các hàm riêng của bạn -----
     void uvmapFollowPath();
     void modelSurfaceGeometryData(std::list<CAcDbUVMap*>& lstDbUVMap);
+    void modelSolidGeometryData(std::list<CAcDbUVMap*>& lstDbUVMap);
 };
