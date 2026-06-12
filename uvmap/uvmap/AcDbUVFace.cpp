@@ -25,13 +25,17 @@ ACRX_DXF_DEFINE_MEMBERS(CAcDbUVFace, AcDbEntity,
 
 CAcDbUVFace::CAcDbUVFace()
 {
-	m_draw3d = false;
-	m_draw2d = true;
-	m_geUVFace = new CAcGeUVFace;
+	m_geUVFace				= new CAcGeUVFace;
+	m_geUVGrid				= NULL;
+	m_draw3d				= false;
+	m_draw2d				= true;
+	m_ownsGe				= true;
 }
 
 CAcDbUVFace::~CAcDbUVFace()
 {
+	if (m_ownsGe)
+		SAFE_DELETE(m_geUVFace);
 }
 
 Adesk::Boolean CAcDbUVFace::subWorldDraw(AcGiWorldDraw* mode)
@@ -454,7 +458,10 @@ bool CAcDbUVFace::setGeUVFace(const CAcGeUVFace* geUVFace)
 	{
 		return false;
 	}
+	if (m_ownsGe)
+		SAFE_DELETE(m_geUVFace);
 	m_geUVFace = const_cast<CAcGeUVFace*>(geUVFace);
+	m_ownsGe = false;
 	return true;
 }
 

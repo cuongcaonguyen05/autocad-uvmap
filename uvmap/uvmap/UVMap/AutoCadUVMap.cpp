@@ -16,7 +16,7 @@ std::string AutoCadUVMap::Name() const
 
 std::string AutoCadUVMap::Description() const
 {
-    return "Sinh toa do UV cho doi tuong AutoCAD";
+    return "Create UV coordinate grids for AutoCAD objects.";
 }
 
 int AutoCadUVMap::Execute()
@@ -31,43 +31,41 @@ void AutoCadUVMap::uvmapFollowPath()
 	if (!pEnt)
 		return;
 
-	pEnt->close();
-
 	if (!pEnt->isKindOf(AcDbPolyline::desc()))
-		return;
-
-	double height = 1, width = 1, row = 1;
-
-	if (!CAcadUtil::GetInstance()->GetDouble(_T("\r\nHeight : "), 1, height))
 	{
-		return;
-	}
-
-	if (!CAcadUtil::GetInstance()->GetDouble(_T("\r\nWidth : "), 1, width))
-	{
-		return;
-	}
-
-	if (!CAcadUtil::GetInstance()->GetDouble(_T("\r\nNumber Of Rows : "), 1, row))
-	{
+		pEnt->close();
 		return;
 	}
 
 	AcDbPolyline* polyline = AcDbPolyline::cast(pEnt);
 	if (!polyline)
 	{
+		pEnt->close();
 		return;
 	}
 
+	double height = 1, width = 1, row = 1;
+
+	if (!CAcadUtil::GetInstance()->GetDouble(_T("\r\nHeight : "), 1, height)
+		|| !CAcadUtil::GetInstance()->GetDouble(_T("\r\nWidth : "), 1, width)
+		|| !CAcadUtil::GetInstance()->GetDouble(_T("\r\nNumber Of Rows : "), 1, row))
+	{
+		polyline->close();
+		return;
+	}
+
+	int nrow = std::ceil(row);
+
 	CAcDbUVMap* dbUvMap = new CAcDbUVMap;
 	CAcDbUVGrid* uvGrid = new CAcDbUVGrid;
-	int nrow = std::ceil(row);
 	uvGrid->setMapPointUVByAlignment(polyline, height, width, nrow, 0);
 	dbUvMap->getGeUVMap()->setGeUVGrid(uvGrid->getGeUVGrid());
 	dbUvMap->setDbUVGrip(uvGrid);
-	dbUvMap->m_dbPolyline = polyline;
+	dbUvMap->setDbPolyline(polyline);
 	dbUvMap->setDrawUVGrid(true);
 	uvGrid->setFixed(false);
+
+	polyline->close(); 
 	CAcadUtil::GetInstance()->Append(dbUvMap);
 }
 

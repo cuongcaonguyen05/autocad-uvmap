@@ -30,7 +30,7 @@ AcDbEntity* CAcadUtil::EntSelectEntity(const std::wstring& msg, AcGePoint3d& ptP
 			pEnt = CAcadUtil::GetEntytifromHandle(mId.handle(), objOpenMode);
 			ptPoint.x = mPt[0];
 			ptPoint.y = mPt[1];
-			if (objOpenMode == AcDb::kForRead)
+			if (pEnt && objOpenMode == AcDb::kForRead)
 				pEnt->close();
 
 			return pEnt;
@@ -183,17 +183,15 @@ Adesk::Boolean CAcadUtil::Append(AcDbEntity* pEntity, AcDbObjectId& objId)
 		this->addItemId(pEntity);
 		AcDbBlockTable* pBlockTable = NULL;
 		Acad::ErrorStatus	  es;
-		es = database
-			->getSymbolTable(pBlockTable, AcDb::kForRead);
+		es = database->getSymbolTable(pBlockTable, AcDb::kForRead);
 
 		if (es != Acad::eOk) {
 			return Adesk::kFalse;
 		}
-		pBlockTable->close();
-		//assert(es == Acad::eOk);
+
 		AcDbBlockTableRecord* pBlockTableRecord;
-		es = pBlockTable->getAt(ACDB_MODEL_SPACE, pBlockTableRecord,
-			AcDb::kForWrite);
+		es = pBlockTable->getAt(ACDB_MODEL_SPACE, pBlockTableRecord, AcDb::kForWrite);
+		pBlockTable->close();
 
 		if (es != Acad::eOk) {
 			return Adesk::kFalse;
@@ -202,25 +200,23 @@ Adesk::Boolean CAcadUtil::Append(AcDbEntity* pEntity, AcDbObjectId& objId)
 		es = pBlockTableRecord->appendAcDbEntity(pEntity);
 		if (es != Acad::eOk) {
 			pBlockTableRecord->close();
-			pEntity->close();  // Bug fix: close entity to prevent open-without-close
+			pEntity->close();
 			return Adesk::kFalse;
 		}
-		//assert(es == Acad::eOk);
 		es = pBlockTableRecord->close();
-		//assert(es == Acad::eOk);
 
 		pEntity->close();
 
-
 		objId = pEntity->objectId();
-		//assert(es == Acad::eOk);
+
 		return Adesk::kTrue;
 	}
 	catch (const std::exception& esx)
 	{
 		int lastError = GetLastError();
-		// Bug fix: close entity on exception to prevent open-without-close
-		if (pEntity) pEntity->close();
+		if (pEntity) 
+			pEntity->close();
+
 		return Adesk::kFalse;
 	}
 }

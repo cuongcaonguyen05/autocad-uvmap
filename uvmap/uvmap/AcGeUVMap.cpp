@@ -3,14 +3,18 @@
 
 CAcGeUVMap::CAcGeUVMap() : m_szName(L""), m_szGroupName(L""), m_szBridgeName(L"")
 {
-	m_geUVFace = new CAcGeUVFace;
-	m_geUVGrid = new CAcGeUVGrid;
+	m_geUVFace			= new CAcGeUVFace;
+	m_geUVGrid			= new CAcGeUVGrid;
+	m_ownsFace			= true;
+	m_ownsGrid			= true;
 }
 
 CAcGeUVMap::~CAcGeUVMap()
 {
-	SAFE_DELETE(m_geUVFace);
-	SAFE_DELETE(m_geUVGrid);
+	if (m_ownsFace)
+		SAFE_DELETE(m_geUVFace);
+	if (m_ownsGrid)
+		SAFE_DELETE(m_geUVGrid);
 }
 
 void CAcGeUVMap::setName(const std::wstring& name)
@@ -52,7 +56,10 @@ bool CAcGeUVMap::setGeUVFace(const CAcGeUVFace* geUVFace)
 	if (!geUVFace) {
 		return false;
 	}
+	if (m_ownsFace)
+		SAFE_DELETE(m_geUVFace);
 	m_geUVFace = const_cast<CAcGeUVFace*>(geUVFace);
+	m_ownsFace = false;
 	return true;
 }
 
@@ -61,12 +68,15 @@ CAcGeUVGrid* CAcGeUVMap::getGeUVGrid() const
 	return m_geUVGrid;
 }
 
-bool CAcGeUVMap::setGeUVGrid(/*const*/ CAcGeUVGrid* geUVGrid)
+bool CAcGeUVMap::setGeUVGrid( CAcGeUVGrid* geUVGrid)
 {
 	if (!geUVGrid) {
 		return false;
 	}
+	if (m_ownsGrid)
+		SAFE_DELETE(m_geUVGrid);
 	m_geUVGrid = const_cast<CAcGeUVGrid*>(geUVGrid);
+	m_ownsGrid = false;
 	return true;
 }
 

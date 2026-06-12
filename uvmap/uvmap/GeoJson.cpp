@@ -11,15 +11,15 @@ CGeoJson::CGeoJson(void)
 {
 	memset(m_szActiveProject, 0, JSON_STRING_MAX_LENGTH);
 
-	m_lType = -1;
-	m_r = 0; m_g = 0; m_b = 0;
-	m_lId = 0;
-	m_alignmentPos = 0;
-	m_roadLineModelItemId = 0;
-	m_wLayer = L"";
-	m_roadSignId = 0;
-	m_privateId = 0;
-	m_matrixRoadSign = AcGeMatrix3d::kIdentity;
+	m_lType					= -1;
+	m_r						= 0; m_g		= 0; m_b		= 0;
+	m_lId					= 0;
+	m_alignmentPos			= 0;
+	m_roadLineModelItemId	= 0;
+	m_wLayer				= L"";
+	m_roadSignId			= 0;
+	m_privateId				= 0;
+	m_matrixRoadSign		= AcGeMatrix3d::kIdentity;
 }
 
 vizDatabase::CGeoJson::iterator vizDatabase::CGeoJson::begin()
@@ -165,8 +165,6 @@ bool CGeoJson::setGeoInfo(const POINT3D& point) {
 }
 
 bool CGeoJson::setGeoInfo(const double& x, const double& y, const double& z) {
-	// TRACE toạ độ X rác (X easting thực < ~700k; >900k = artifact). Log kèm
-	// "Entering method" gần nhất ở trên → lộ hàm gốc đẻ ra vertex rác.
 	if (x > 900000.0 || x < -900000.0) {
 		static long s_tr = 0;
 	}

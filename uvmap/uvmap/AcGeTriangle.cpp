@@ -4,14 +4,19 @@
 CAcGeTriangle::CAcGeTriangle()
 {
 	for (int i = 0; i < 3; i++) {
-		m_vertex[0] = AcGePoint3d(0, 0, 0);
+		m_vertex[i]		= AcGePoint3d(0, 0, 0);
+		m_trcood[i]		= AcGePoint2d(0, 0);
+		m_vertexId[i]	= 0;
 	}
+	m_triangleId		= 0;
 }
 CAcGeTriangle::CAcGeTriangle(const AcGePoint3d& first, const AcGePoint3d& second, const AcGePoint3d& third)
 {
 	m_vertex[0] = first;
 	m_vertex[1] = second;
 	m_vertex[2] = third;
+	for (int i = 0; i < 3; i++) { m_trcood[i] = AcGePoint2d(0, 0); m_vertexId[i] = 0; }
+	m_triangleId = 0;
 }
 
 CAcGeTriangle::CAcGeTriangle(const AcGePoint3d& base, const AcGeVector3d& direct1, const AcGeVector3d& direct2)
@@ -19,6 +24,8 @@ CAcGeTriangle::CAcGeTriangle(const AcGePoint3d& base, const AcGeVector3d& direct
 	m_vertex[0] = base;
 	m_vertex[1] = m_vertex[0] + direct1;
 	m_vertex[2] = m_vertex[0] + direct2;
+	for (int i = 0; i < 3; i++) { m_trcood[i] = AcGePoint2d(0, 0); m_vertexId[i] = 0; }
+	m_triangleId = 0;
 }
 
 CAcGeTriangle::~CAcGeTriangle()

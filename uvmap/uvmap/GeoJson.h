@@ -92,8 +92,6 @@ namespace vizDatabase
 			DB_VPVPROJECT = 81,
 			DB_INTS = 82,
 			DB_RINTS = 83,
-			// Instancing: bảng instance của 1 prototype solid (giảm ~71% geometry
-			// cho CAD copy-paste). Record lưu prototypeId + list ma trận rigid.
 			DB_INSTANCE_TABLE = 84
 		};
 	}
@@ -121,28 +119,28 @@ namespace vizDatabase
 	class CGeoJson
 	{
 	protected:
-		unsigned long m_lType;
+		unsigned long		m_lType;
 		std::list<POINT3D*> m_vertex;
 		std::list<POINT2D*> m_vertex2d;
 		std::list<POINT2D*> m_texCoords;
-		unsigned long m_lId;
+		unsigned long		m_lId;
 
-		int m_r, m_g, m_b;
-		unsigned long m_lLayer;
-		std::wstring m_wLayer;
+		int					m_r, m_g, m_b;
+		unsigned long		m_lLayer;
+		std::wstring		m_wLayer;
 
-		bool m_visible;
-		char m_szActiveProject[JSON_STRING_MAX_LENGTH];
+		bool				m_visible;
+		char				m_szActiveProject[JSON_STRING_MAX_LENGTH];
 
-		std::list<POINT3D> m_listVertext;
-		unsigned long m_alignmentPos;
-		double m_rgbColor_r, m_rgbColor_g, m_rgbColor_b;
+		std::list<POINT3D>	m_listVertext;
+		unsigned long		m_alignmentPos;
+		double				m_rgbColor_r, m_rgbColor_g, m_rgbColor_b;
 
-		unsigned long m_roadLineModelItemId;
-		unsigned long m_roadSignId;
-		unsigned long m_privateId;
+		unsigned long		m_roadLineModelItemId;
+		unsigned long		m_roadSignId;
+		unsigned long		m_privateId;
 
-		AcGeMatrix3d m_matrixRoadSign;
+		AcGeMatrix3d		m_matrixRoadSign;
 
 		//must not create a new single instance
 		CGeoJson(void);

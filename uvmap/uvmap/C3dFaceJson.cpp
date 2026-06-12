@@ -6,33 +6,21 @@
 #include <sstream>
 
 using namespace vizDatabase;
-long C3dFaceJson::m_version = 9;
-
-struct POINT3DComparator {
-	static constexpr double EPSILONEX = 1e-9;
-	bool operator()(const POINT3D& a, const POINT3D& b) const {
-		if (fabs(a.x - b.x) > EPSILONEX) return a.x < b.x;
-		if (fabs(a.y - b.y) > EPSILONEX) return a.y < b.y;
-		if (fabs(a.z - b.z) > EPSILONEX) return a.z < b.z;
-		return false;
-	}
-};
+long C3dFaceJson::m_version = 1;
 
 C3dFaceJson::C3dFaceJson(void)
 {
-	m_normal.x = 0; m_normal.y = 0; m_normal.z = 1;
-	m_direction.x = 1; m_direction.y = 0; m_direction.z = 0;
-	m_lType = DbType::DB_3D_FACE;
-
-	m_origin.x = 0; m_origin.y = 0; m_origin.z = -1000000;
-	m_r = 0;
-	m_g = 0;
-	m_b = 0;
+	m_normal.x		= 0; m_normal.y			= 0; m_normal.z			= 1;
+	m_direction.x	= 1; m_direction.y		= 0; m_direction.z		= 0;
+	m_origin.x		= 0; m_origin.y			= 0; m_origin.z			= -1000000;
+	m_lType			= DbType::DB_3D_FACE;
+	m_r				= 0;
+	m_g				= 0;
+	m_b				= 0;
 }
 
 C3dFaceJson::~C3dFaceJson(void)
 {
-
 }
 
 void C3dFaceJson::setNormal(double x, double y, double z) {
@@ -54,9 +42,6 @@ bool C3dFaceJson::buildJson(std::wstring& szOut) {
 
 bool C3dFaceJson::buildBinaries(unsigned char* data, unsigned long& len)
 {
-	//len = size;
-
-	//data = new unsigned char[size];
 	int size = 0;
 	unsigned char* d = data;
 	memcpy(d, &m_version, sizeof(long));
@@ -92,15 +77,11 @@ bool C3dFaceJson::buildBinaries(unsigned char* data, unsigned long& len)
 		d += sizeof(double);
 		size += sizeof(double);
 	}
-	//for version 6
-	/////////////////////////////
+
 	memcpy(d, &m_roadLineModelItemId, sizeof(unsigned long));
 	d += sizeof(unsigned long);
 	size += sizeof(unsigned long);
-	/////////////////////////////
 
-	//For versin 4
-	////////////////////////
 	ul_temp = m_vertex2d.size();
 	memcpy(d, &ul_temp, sizeof(unsigned long));
 	d += sizeof(unsigned long);
@@ -120,8 +101,6 @@ bool C3dFaceJson::buildBinaries(unsigned char* data, unsigned long& len)
 		size += sizeof(double);
 	}
 
-	////////////////////////
-	//for version 3
 	ul_temp = m_texCoords.size();
 	memcpy(d, &ul_temp, sizeof(unsigned long));
 	d += sizeof(unsigned long);
@@ -141,7 +120,6 @@ bool C3dFaceJson::buildBinaries(unsigned char* data, unsigned long& len)
 		size += sizeof(double);
 
 	}
-	//
 
 	memcpy(d, &m_r, sizeof(int));
 	d += sizeof(int);
@@ -227,6 +205,7 @@ bool C3dFaceJson::buildBinaries(unsigned char* data, unsigned long& len)
 	d += sizeof(unsigned long);
 	size += sizeof(unsigned long);
 
+	len = size;
 	return true;
 }
 
@@ -272,72 +251,53 @@ bool C3dFaceJson::readBinaries(unsigned char* data, unsigned long& len) {
 
 		m_vertex.push_back(p1);
 	}
-	//for version 4
-	////////////////////////////////////////////////
-	if (version > 5) {
-		m_roadLineModelItemId = *(unsigned long*)d;
-		d += sizeof(unsigned long);
-		size += sizeof(unsigned long);
-	}
-	////////////////////////////////////////////////
 
+	m_roadLineModelItemId = *(unsigned long*)d;
+	d += sizeof(unsigned long);
+	size += sizeof(unsigned long);
 
-	//for version 4
-	////////////////////////////////////////////////
-	if (version > 3) {
-		ul_temp = (unsigned long*)d;
-		d += sizeof(unsigned long);
-		size += sizeof(unsigned long);
+	ul_temp = (unsigned long*)d;
+	d += sizeof(unsigned long);
+	size += sizeof(unsigned long);
 
-		for (unsigned long i = 0; i < *ul_temp; i++)
-		{
-			POINT2D* p1 = new POINT2D();
-			double* d_temp = NULL;
+	for (unsigned long i = 0; i < *ul_temp; i++)
+	{
+		POINT2D* p1 = new POINT2D();
+		double* d_temp = NULL;
 
-			d_temp = (double*)d;
-			p1->x = *d_temp;
-			d += sizeof(double);
-			size += sizeof(double);
-
-			d_temp = (double*)d;
-			p1->y = *d_temp;
-			d += sizeof(double);
-			size += sizeof(double);
-
-
-			m_vertex2d.push_back(p1);
-		}
-	}
-	////////////////////////////////////////////////
-	if (version > 2) {
-		ul_temp = (unsigned long*)d;
-		d += sizeof(unsigned long);
-		size += sizeof(unsigned long);
-
-		for (unsigned long i = 0; i < *ul_temp; i++)
-		{
-			POINT2D* p1 = new POINT2D();
-			double* d_temp = NULL;
-
-			d_temp = (double*)d;
-			p1->x = *d_temp;
-			d += sizeof(double);
-			size += sizeof(double);
-
-			d_temp = (double*)d;
-			p1->y = *d_temp;
-			d += sizeof(double);
-			size += sizeof(double);
-
-			m_texCoords.push_back(p1);
-		}
-	}
-
-	double* alignmentPosInDouble = (double*)d;
-	unsigned long ulongValue = (unsigned long)(*alignmentPosInDouble);
-	if ((*alignmentPosInDouble) - ulongValue >= 0.5 && (*alignmentPosInDouble) - ulongValue < 1) {
+		d_temp = (double*)d;
+		p1->x = *d_temp;
 		d += sizeof(double);
 		size += sizeof(double);
+
+		d_temp = (double*)d;
+		p1->y = *d_temp;
+		d += sizeof(double);
+		size += sizeof(double);
+
+		m_vertex2d.push_back(p1);
+	}
+
+	ul_temp = (unsigned long*)d;
+	d += sizeof(unsigned long);
+	size += sizeof(unsigned long);
+
+	for (unsigned long i = 0; i < *ul_temp; i++)
+	{
+		POINT2D* p1 = new POINT2D();
+		double* d_temp = NULL;
+
+		d_temp = (double*)d;
+		p1->x = *d_temp;
+		d += sizeof(double);
+		size += sizeof(double);
+
+		d_temp = (double*)d;
+		p1->y = *d_temp;
+		d += sizeof(double);
+		size += sizeof(double);
+
+		m_texCoords.push_back(p1);
 	}
 
 	int* i_temp = NULL;
@@ -361,7 +321,6 @@ bool C3dFaceJson::readBinaries(unsigned char* data, unsigned long& len) {
 
 	m_b = *i_temp;
 
-
 	//normal
 	double* d_temp = NULL;
 
@@ -374,7 +333,6 @@ bool C3dFaceJson::readBinaries(unsigned char* data, unsigned long& len) {
 	m_normal.y = *d_temp;
 	d += sizeof(double);
 	size += sizeof(double);
-
 
 	d_temp = (double*)d;
 	m_normal.z = *d_temp;
@@ -389,82 +347,61 @@ bool C3dFaceJson::readBinaries(unsigned char* data, unsigned long& len) {
 	d += sizeof(double);
 	size += sizeof(double);
 
-
 	d_temp = (double*)d;
 	m_direction.y = *d_temp;
 	d += sizeof(double);
 	size += sizeof(double);
-
 
 	d_temp = (double*)d;
 	m_direction.z = *d_temp;
 	d += sizeof(double);
 	size += sizeof(double);
 
-
 	//origin
 	d_temp = NULL;
-	if (version >= 2) {
-		d_temp = (double*)d;
-		m_origin.x = *d_temp;
-		d += sizeof(double);
-		size += sizeof(double);
+	d_temp = (double*)d;
+	m_origin.x = *d_temp;
+	d += sizeof(double);
+	size += sizeof(double);
 
+	d_temp = (double*)d;
+	m_origin.y = *d_temp;
+	d += sizeof(double);
+	size += sizeof(double);
 
-		d_temp = (double*)d;
-		m_origin.y = *d_temp;
-		d += sizeof(double);
-		size += sizeof(double);
+	d_temp = (double*)d;
+	m_origin.z = *d_temp;
+	d += sizeof(double);
+	size += sizeof(double);
 
+	unsigned long* aligmentPos = NULL;
+	aligmentPos = (unsigned long*)d;
+	d += sizeof(unsigned long);
+	size += sizeof(unsigned long);
+	this->setAlignmentPos(*aligmentPos);
 
-		d_temp = (double*)d;
-		m_origin.z = *d_temp;
-		d += sizeof(double);
-		size += sizeof(double);
+	unsigned long* roadSignId = NULL;
+	roadSignId = (unsigned long*)d;
+	d += sizeof(unsigned long);
+	size += sizeof(unsigned long);
+	this->setIdRoadSign(*roadSignId);
 
-
-	}
-
-	if (version > 4)
+	for (int row = 0; row < 4; row++)
 	{
-		unsigned long* aligmentPos = NULL;
-		aligmentPos = (unsigned long*)d;
-		d += sizeof(unsigned long);
-		size += sizeof(unsigned long);
-		this->setAlignmentPos(*aligmentPos);
-	}
-
-	if (version > 6)
-	{
-		unsigned long* roadSignId = NULL;
-		roadSignId = (unsigned long*)d;
-		d += sizeof(unsigned long);
-		size += sizeof(unsigned long);
-		this->setIdRoadSign(*roadSignId);
-	}
-
-	if (version > 7)
-	{
-		for (int row = 0; row < 4; row++)
+		for (int col = 0; col < 4; col++)
 		{
-			for (int col = 0; col < 4; col++)
-			{
-				double* d_temp = (double*)d;
-				m_matrixRoadSign.entry[row][col] = *d_temp;
-				d += sizeof(double);
-				size += sizeof(double);
-			}
+			double* d_temp = (double*)d;
+			m_matrixRoadSign.entry[row][col] = *d_temp;
+			d += sizeof(double);
+			size += sizeof(double);
 		}
 	}
 
-	if (version > 8)
-	{
-		unsigned long* privateId = NULL;
-		privateId = (unsigned long*)d;
-		d += sizeof(unsigned long);
-		size += sizeof(unsigned long);
-		this->setPrivateId(*privateId);
-	}
+	unsigned long* privateId = NULL;
+	privateId = (unsigned long*)d;
+	d += sizeof(unsigned long);
+	size += sizeof(unsigned long);
+	this->setPrivateId(*privateId);
 
 	len = size;
 	return true;
@@ -486,15 +423,11 @@ unsigned long C3dFaceJson::getBinariesSize() {
 	size += sizeof(unsigned long);
 	size += 2 * sizeof(double) * m_texCoords.size();
 
-
-
 	size += 3 * sizeof(int);
 
-
 	size += 3 * sizeof(double);
 
 	size += 3 * sizeof(double);
-
 
 	size += 3 * sizeof(double);
 
@@ -505,20 +438,6 @@ unsigned long C3dFaceJson::getBinariesSize() {
 	size += 16 * sizeof(double);
 
 	size += sizeof(unsigned long);
-	/*
-	unsigned long size = 0;
-	size += sizeof(long);
-	size += sizeof(unsigned long);						// size list point
-	size += sizeof(double) * 3 * m_vertex.size();		// list point
-	size += sizeof(int) * 3;							// color
-	size += sizeof(unsigned long);	// Layer
-	size += sizeof(double) * 3; //normal
-
-	size += sizeof(double) * 3; //direction
-	size += sizeof(double) * 3; //origin
-
-	size += sizeof(double) * 2 * m_texCoords.size();		// list point
-	*/
 	return size;
 }
 

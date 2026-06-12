@@ -8,9 +8,11 @@
 class CAcDbUVMap : public AcDbEntity
 {
 private:
-	CAcGeUVMap* m_geUvMap;
-	bool m_drawUVGrid;
-	CAcDbUVGrid* m_dbUvGrip;
+	CAcGeUVMap*					m_geUvMap;
+	CAcDbUVGrid*				m_dbUvGrip;
+	AcDbPolyline*				m_dbPolyline;
+	bool						m_drawUVGrid;
+	bool						m_bEditTri;
 
 protected:
 	static Adesk::UInt32 kCurrentVersionNumber;
@@ -21,9 +23,14 @@ public:
 	CAcDbUVMap();
 	~CAcDbUVMap();
 	CAcGeUVGrid* getGridItem();
-	AcDbPolyline* m_dbPolyline;
+	CAcGeUVMap* getGeUVMap() const;
+	void setDbPolyline(AcDbPolyline* dbPolyline);
+	void setGeUVMap(const CAcGeUVMap* geUVMap);
+	void setDbUVGrip(const CAcDbUVGrid* dbUvGrip);
+	CAcDbUVGrid* getDbUVGrip();
+	void setDrawUVGrid(const bool& isDraw);
+	bool getDrawUVGrid();
 
-public:
 	virtual Adesk::Boolean subWorldDraw(AcGiWorldDraw* mode);
 	virtual Acad::ErrorStatus subGetGeomExtents(AcDbExtents& extents) const;
 	virtual Acad::ErrorStatus subTransformBy(const AcGeMatrix3d& xform);
@@ -97,11 +104,4 @@ public:
 
 	virtual Acad::ErrorStatus setColorIndex(Adesk::UInt16 color,
 		Adesk::Boolean doSubents = true);
-	CAcGeUVMap* getGeUVMap() const;
-	bool setGeUVMap(const CAcGeUVMap* geUVMap);
-	bool setDbUVGrip(const CAcDbUVGrid* dbUvGrip);
-	CAcDbUVGrid* getDbUVGrip();
-	void setDrawUVGrid(const bool& isDraw);
-	bool getDrawUVGrid();
-	bool m_bEditTri;
 };

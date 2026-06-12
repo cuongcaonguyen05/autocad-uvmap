@@ -6,10 +6,11 @@ class CAcGeUVGrid;
 class CAcGeUVGrid;
 class CAcDbUVFace : public AcDbEntity
 {
-	bool m_draw3d;
-	bool m_draw2d;
-	CAcGeUVFace* m_geUVFace;
-	CAcGeUVGrid* m_geUVGrid;
+	CAcGeUVFace*			m_geUVFace;
+	CAcGeUVGrid*			m_geUVGrid;
+	bool					m_draw3d;
+	bool					m_draw2d;
+	bool					m_ownsGe;
 
 protected:
 	static Adesk::UInt32 kCurrentVersionNumber;

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "AcDbUVMap.h"
 
-Adesk::UInt32 CAcDbUVMap::kCurrentVersionNumber = 2;
+Adesk::UInt32 CAcDbUVMap::kCurrentVersionNumber = 1;
 
 ACRX_DXF_DEFINE_MEMBERS(CAcDbUVMap, AcDbEntity,
 	AcDb::kDHL_CURRENT, AcDb::kMReleaseCurrent,
@@ -24,35 +24,31 @@ ACRX_DXF_DEFINE_MEMBERS(CAcDbUVMap, AcDbEntity,
 
 CAcDbUVMap::CAcDbUVMap()
 {
-	m_geUvMap = new CAcGeUVMap;
-	m_drawUVGrid = true;
-	m_bEditTri = false;
-	m_dbUvGrip = new CAcDbUVGrid;
-	m_dbPolyline = NULL;
+	m_geUvMap			= new CAcGeUVMap;
+	m_drawUVGrid		= true;
+	m_bEditTri			= false;
+	m_dbUvGrip			= new CAcDbUVGrid;
+	m_dbPolyline		= new AcDbPolyline();
 }
 
 CAcDbUVMap::~CAcDbUVMap()
 {
 	SAFE_DELETE(m_geUvMap);
+	SAFE_DELETE(m_dbUvGrip);
+	SAFE_DELETE(m_dbPolyline);
 }
 
 Adesk::Boolean CAcDbUVMap::subWorldDraw(AcGiWorldDraw* mode)
 {
 	assertReadEnabled();
 	if (!mode)
-	{
 		return Adesk::kFalse;
-	}
 
 	if (!mode->isDragging())
-	{
 		assertReadEnabled();
-	}
 
 	if (mode->regenAbort())
-	{
 		return Adesk::kTrue;
-	}
 
 	AcCmEntityColor oldColor = mode->subEntityTraits().trueColor();
 	AcCmEntityColor newColor;
@@ -83,7 +79,17 @@ CAcGeUVGrid* CAcDbUVMap::getGridItem()
 
 Acad::ErrorStatus CAcDbUVMap::subGetGeomExtents(AcDbExtents& extents) const
 {
-	return Acad::eNotApplicable;
+	assertReadEnabled();
+	if (!m_geUvMap)
+		return Acad::eNotApplicable;
+
+	CAcGeUVGrid* geGrid = m_geUvMap->getGeUVGrid();
+	if (!geGrid)
+		return Acad::eNotApplicable;
+
+	CAcDbUVGrid dbGrid;
+	dbGrid.setGeUVGrid(geGrid);
+	return dbGrid.bounds(extents) ? Acad::eOk : Acad::eNotApplicable;
 }
 
 Acad::ErrorStatus CAcDbUVMap::subTransformBy(const AcGeMatrix3d& xform)
@@ -92,25 +98,18 @@ Acad::ErrorStatus CAcDbUVMap::subTransformBy(const AcGeMatrix3d& xform)
 	CAcGeUVGrid* geUVGrid = NULL;
 	geUVGrid = m_geUvMap->getGeUVGrid();
 	if (!geUVGrid)
-	{
 		return Acad::eNullPtr;
-	}
 
 	if (geUVGrid->getFixed())
-	{
 		return Acad::eNullPtr;
-	}
 
 	CAcDbUVGrid dbUVGrid;
 	if (!dbUVGrid.setGeUVGrid(geUVGrid))
-	{
 		return Acad::eNullPtr;
-	}
+
 	dbUVGrid.transformBy(xform);
 	if (m_dbPolyline)
-	{
 		m_dbPolyline->transformBy(xform);
-	}
 
 	return Acad::eOk;
 }
@@ -125,21 +124,15 @@ Acad::ErrorStatus CAcDbUVMap::subGetGripPoints(AcGePoint3dArray& gripPoints, AcD
 	CAcGeUVGrid* geUVGrid = NULL;
 	geUVGrid = m_geUvMap->getGeUVGrid();
 	if (!geUVGrid)
-	{
 		return Acad::eNullPtr;
-	}
 
 	if (geUVGrid->getFixed())
-	{
 		return Acad::eNullPtr;
-	}
 
 	CAcDbUVFace dbUVFace;
 	CAcDbUVGrid dbUVGrid;
 	if (!dbUVGrid.setGeUVGrid(geUVGrid) || !dbUVFace.setGeUVFace(m_geUvMap->getGeUVFace()))
-	{
 		return Acad::eNullPtr;
-	}
 
 	assertReadEnabled();
 
@@ -160,21 +153,15 @@ Acad::ErrorStatus CAcDbUVMap::subMoveGripPointsAt(const AcDbIntArray& indices, c
 	CAcGeUVGrid* geUVGrid = NULL;
 	geUVGrid = m_geUvMap->getGeUVGrid();
 	if (!geUVGrid)
-	{
 		return Acad::eNullPtr;
-	}
 
 	if (geUVGrid->getFixed())
-	{
 		return Acad::eNullPtr;
-	}
 
 	CAcDbUVFace dbUVFace;
 	CAcDbUVGrid dbUVGrid;
 	if (!dbUVGrid.setGeUVGrid(geUVGrid) || !dbUVFace.setGeUVFace(m_geUvMap->getGeUVFace()))
-	{
 		return Acad::eNullPtr;
-	}
 
 	assertWriteEnabled();
 
@@ -208,22 +195,17 @@ Acad::ErrorStatus CAcDbUVMap::subIntersectWith(const AcDbEntity* ent, AcDb::Inte
 Acad::ErrorStatus CAcDbUVMap::subGetOsnapPoints(AcDb::OsnapMode osnapMode, Adesk::GsMarker gsSelectionMark, const AcGePoint3d& pickPoint, const AcGePoint3d& lastPoint, const AcGeMatrix3d& viewXform, AcGePoint3dArray& snapPoints, AcDbIntArray& geomIds) const
 {
 	if (!m_geUvMap)
-	{
 		return Acad::eNullPtr;
-	}
+
 	assertReadEnabled();
 	CAcDbUVFace dbUVFace;
 	CAcDbUVGrid dbUVGrid;
 	if (!dbUVFace.setGeUVFace(m_geUvMap->getGeUVFace()) || !dbUVGrid.setGeUVGrid(m_geUvMap->getGeUVGrid()))
-	{
 		return Acad::eNullPtr;
-	}
 
 	dbUVFace.subGetOsnapPoints(osnapMode, gsSelectionMark, pickPoint, lastPoint, viewXform, snapPoints, geomIds);
 	if (m_drawUVGrid)
-	{
 		dbUVGrid.subGetOsnapPoints(osnapMode, gsSelectionMark, pickPoint, lastPoint, viewXform, snapPoints, geomIds);
-	}
 
 	return Acad::eOk;
 }
@@ -231,22 +213,19 @@ Acad::ErrorStatus CAcDbUVMap::subGetOsnapPoints(AcDb::OsnapMode osnapMode, Adesk
 Acad::ErrorStatus CAcDbUVMap::subGetOsnapPoints(AcDb::OsnapMode osnapMode, Adesk::GsMarker gsSelectionMark, const AcGePoint3d& pickPoint, const AcGePoint3d& lastPoint, const AcGeMatrix3d& viewXform, AcGePoint3dArray& snapPoints, AcDbIntArray& geomIds, const AcGeMatrix3d& insertionMat) const
 {
 	if (!m_geUvMap)
-	{
 		return Acad::eNullPtr;
-	}
+
 	assertReadEnabled();
 	CAcDbUVFace dbUVFace;
 	CAcDbUVGrid dbUVGrid;
 	if (!dbUVFace.setGeUVFace(m_geUvMap->getGeUVFace()) || !dbUVGrid.setGeUVGrid(m_geUvMap->getGeUVGrid()))
-	{
 		return Acad::eNullPtr;
-	}
+
 	dbUVFace.subGetOsnapPoints(osnapMode, gsSelectionMark, pickPoint, lastPoint, viewXform, snapPoints, geomIds, insertionMat);
 
 	if (m_drawUVGrid)
-	{
 		dbUVGrid.subGetOsnapPoints(osnapMode, gsSelectionMark, pickPoint, lastPoint, viewXform, snapPoints, geomIds, insertionMat);
-	}
+
 	return Acad::eOk;
 }
 
@@ -273,9 +252,7 @@ Acad::ErrorStatus CAcDbUVMap::dwgInFields(AcDbDwgFiler* filer)
 	Acad::ErrorStatus es;
 	es = AcDbEntity::dwgInFields(filer);
 	if (es != Acad::eOk)
-	{
 		return es;
-	}
 
 	// object version - must always be the first item.
 	Adesk::UInt32 version = 0;
@@ -283,9 +260,7 @@ Acad::ErrorStatus CAcDbUVMap::dwgInFields(AcDbDwgFiler* filer)
 		return es;
 
 	if (version > CAcDbUVMap::kCurrentVersionNumber)
-	{
 		return Acad::eMakeMeProxy;
-	}
 
 	CAcDbUVGrid dbUVGrid;
 	CAcGeUVGrid* geUVGrid = m_geUvMap->getGeUVGrid();
@@ -295,9 +270,7 @@ Acad::ErrorStatus CAcDbUVMap::dwgInFields(AcDbDwgFiler* filer)
 
 	es = dbUVGrid.dwgInFields(filer);
 	if (es != Acad::eOk)
-	{
 		return es;
-	}
 
 	CAcDbUVFace dbUVFace;
 	CAcGeUVFace* geUVFace = m_geUvMap->getGeUVFace();
@@ -307,19 +280,13 @@ Acad::ErrorStatus CAcDbUVMap::dwgInFields(AcDbDwgFiler* filer)
 
 	es = dbUVFace.dwgInFields(filer);
 	if (es != Acad::eOk)
-	{
 		return es;
-	}
-	if (version > 1)
-	{
-		if (m_dbPolyline)
-		{
-			delete m_dbPolyline;
-		}
-		m_dbPolyline = new AcDbPolyline();
-		es = m_dbPolyline->dwgInFields(filer);
-	}
 
+	if (m_dbPolyline)
+		delete m_dbPolyline;
+
+	m_dbPolyline = new AcDbPolyline();
+	es = m_dbPolyline->dwgInFields(filer);
 
 	return filer->filerStatus();
 }
@@ -330,37 +297,35 @@ Acad::ErrorStatus CAcDbUVMap::dwgOutFields(AcDbDwgFiler* filer) const
 	Acad::ErrorStatus es;
 	es = AcDbEntity::dwgOutFields(filer);
 	if (es != Acad::eOk)
-	{
 		return es;
-	}
 
 	// object version - must always be the first item.
 	if ((es = filer->writeUInt32(CAcDbUVMap::kCurrentVersionNumber)) != Acad::eOk)
-	{
 		return es;
-	}
 
 	CAcDbUVGrid dbUVGrid;
 	dbUVGrid.setGeUVGrid(m_geUvMap->getGeUVGrid());
 	es = dbUVGrid.dwgOutFields(filer);
 	if (es != Acad::eOk)
-	{
 		return es;
-	}
 
 	CAcDbUVFace dbUVFace;
 	dbUVFace.setGeUVFace(m_geUvMap->getGeUVFace());
 	es = dbUVFace.dwgOutFields(filer);
 	if (es != Acad::eOk)
-	{
 		return es;
-	}
 
-	es = m_dbPolyline->dwgOutFields(filer);
-	if (es != Acad::eOk)
+	if (m_dbPolyline)
 	{
-		return es;
+		es = m_dbPolyline->dwgOutFields(filer);
 	}
+	else
+	{
+		AcDbPolyline emptyPline;
+		es = emptyPline.dwgOutFields(filer);
+	}
+	if (es != Acad::eOk)
+		return es;
 
 	return filer->filerStatus();
 }
@@ -396,14 +361,26 @@ CAcGeUVMap* CAcDbUVMap::getGeUVMap() const
 	return m_geUvMap;
 }
 
-bool CAcDbUVMap::setGeUVMap(const CAcGeUVMap* geUVMap)
+void CAcDbUVMap::setDbPolyline(AcDbPolyline* dbPolyline)
+{
+	if (m_dbPolyline == dbPolyline)
+		return;
+
+	SAFE_DELETE(m_dbPolyline);
+	if (!dbPolyline)
+	{
+		m_dbPolyline = NULL;
+		return;
+	}
+	m_dbPolyline = AcDbPolyline::cast(dbPolyline->clone());
+}
+
+void CAcDbUVMap::setGeUVMap(const CAcGeUVMap* geUVMap)
 {
 	if (!geUVMap)
-	{
-		return false;
-	}
+		return;
+
 	m_geUvMap->copyFrom(geUVMap);
-	return true;
 }
 
 void CAcDbUVMap::setDrawUVGrid(const bool& isDraw)
@@ -416,10 +393,12 @@ bool CAcDbUVMap::getDrawUVGrid()
 	return m_drawUVGrid;
 }
 
-bool CAcDbUVMap::setDbUVGrip(const CAcDbUVGrid* dbUvGrip)
+void CAcDbUVMap::setDbUVGrip(const CAcDbUVGrid* dbUvGrip)
 {
+	if (m_dbUvGrip == dbUvGrip)
+		return;
+	SAFE_DELETE(m_dbUvGrip);
 	m_dbUvGrip = const_cast<CAcDbUVGrid*>(dbUvGrip);
-	return true;
 }
 
 CAcDbUVGrid* CAcDbUVMap::getDbUVGrip()

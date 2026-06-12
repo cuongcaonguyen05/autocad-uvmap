@@ -6,12 +6,12 @@ namespace vizDatabase
 	class C3dFaceJson : public CGeoJson
 	{
 	protected:
-		POINT3D m_normal;
-		POINT3D m_direction;
-		POINT3D m_origin;
-		static long m_version;
+		POINT3D				m_normal;
+		POINT3D				m_direction;
+		POINT3D				m_origin;
+		static long			m_version;
 
-		unsigned long m_vpvItemId;
+		unsigned long		m_vpvItemId;
 		virtual unsigned long getBinariesSize();
 		C3dFaceJson(void);
 	public:

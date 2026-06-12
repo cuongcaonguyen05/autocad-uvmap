@@ -11,9 +11,9 @@ class CAcDbUVMap;
 
 struct SGeQuadrangle2d
 {
-	int iRow = 0;
-	int iCol = 0;
-	CAcGeQuadrangle2d* geQuadrangle = NULL;
+	int iRow							= 0;
+	int iCol							= 0;
+	CAcGeQuadrangle2d* geQuadrangle		= NULL;
 };
 
 class CAcGeUVGrid

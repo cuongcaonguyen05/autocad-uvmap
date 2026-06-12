@@ -238,10 +238,15 @@ void CJsonAdapter::solidJson(AcDbEntity* acdbSolid, vizDatabase::CReadWriteJson*
 		pCen = pMin + (pMax - pMin) * 0.5;
 	AcGeVector3d vTrans(pCen.x, pCen.y, pCen.z);
 
+	// dbSolid đến từ scanAllDatabase nên ĐÃ bị close() — không được mutate trên nó.
+	// Mở lại kForWrite (iDbEnt) để dịch solid về gốc, rồi close chính iDbEnt.
 	AcDbEntity* iDbEnt = CAcadUtil::GetInstance()->GetEntytifromObjectID(dbSolid->objectId(), AcDb::kForWrite);
-	dbSolid->assertWriteEnabled();
-	dbSolid->transformBy(-vTrans);
-	dbSolid->close();
+	if (iDbEnt)
+	{
+		iDbEnt->assertWriteEnabled();
+		iDbEnt->transformBy(-vTrans);
+		iDbEnt->close();
+	}
 
 	AcDbObjectIdArray objIdList;
 	objIdList.setPhysicalLength(1);

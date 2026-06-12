@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "AcDbUVGrid.h"
 
-Adesk::UInt32 CAcDbUVGrid::kCurrentVersionNumber = 2;
+Adesk::UInt32 CAcDbUVGrid::kCurrentVersionNumber = 1;
 
 ACRX_DXF_DEFINE_MEMBERS(CAcDbUVGrid, AcDbEntity,
 	AcDb::kDHL_CURRENT, AcDb::kMReleaseCurrent,
@@ -24,15 +24,18 @@ ACRX_DXF_DEFINE_MEMBERS(CAcDbUVGrid, AcDbEntity,
 
 CAcDbUVGrid::CAcDbUVGrid()
 {
-	m_geUVGrid = new CAcGeUVGrid;
-	m_dbCurve = NULL;
-	m_fixed = false;
-	m_alignment = false;
-	m_isUVMap = false;
+	m_geUVGrid				= new CAcGeUVGrid;
+	m_ownsGe				= true;
+	m_dbCurve				= NULL;
+	m_fixed					= false;
+	m_alignment				= false;
+	m_isUVMap				= false;
 }
 
 CAcDbUVGrid::~CAcDbUVGrid()
 {
+	if (m_ownsGe)
+		SAFE_DELETE(m_geUVGrid);
 }
 
 CAcDbUVGrid::iterator CAcDbUVGrid::begin()
@@ -143,7 +146,8 @@ Adesk::Boolean CAcDbUVGrid::subWorldDraw(AcGiWorldDraw* mode)
 
 Acad::ErrorStatus CAcDbUVGrid::subGetGeomExtents(AcDbExtents& extents) const
 {
-	return Acad::eNotApplicable;
+	assertReadEnabled();
+	return bounds(extents) ? Acad::eOk : Acad::eNotApplicable;
 }
 
 Acad::ErrorStatus CAcDbUVGrid::subTransformBy(const AcGeMatrix3d& xform)
@@ -361,6 +365,9 @@ Acad::ErrorStatus CAcDbUVGrid::subMoveStretchPointsAt(const AcDbIntArray& indice
 
 bool CAcDbUVGrid::bounds(AcDbExtents& bounds) const
 {
+	if (!m_geUVGrid || !m_geUVGrid->m_arrNode)
+		return false;
+
 	std::list<double> lstX, lstY;
 	int iRow = m_geUVGrid->getMapRow(),
 		iCol = m_geUVGrid->getMapColumn();
@@ -538,7 +545,7 @@ Acad::ErrorStatus CAcDbUVGrid::dwgInFields(AcDbDwgFiler* filer)
 	{
 		return es;
 	}
-	m_geUVGrid->m_iCol = row;
+	m_geUVGrid->m_iRow = row;
 
 	es = filer->readItem(&column);
 	if (es != Acad::eOk)
@@ -547,7 +554,7 @@ Acad::ErrorStatus CAcDbUVGrid::dwgInFields(AcDbDwgFiler* filer)
 	}
 	m_geUVGrid->m_iCol = column;
 
-	Adesk::UInt32 sizeOfRow, sizeOfColumn;
+	double sizeOfRow, sizeOfColumn;
 	es = filer->readItem(&sizeOfRow);
 	if (es != Acad::eOk)
 	{
@@ -610,7 +617,7 @@ Acad::ErrorStatus CAcDbUVGrid::dwgInFields(AcDbDwgFiler* filer)
 	m_geUVGrid->setNodesSize(uiRow, uiCol);
 	Adesk::UInt32 uiSize = (uiRow + 1) * (uiCol + 1);
 	AcGePoint2dArray arrNode;
-	arrNode.setPhysicalLength(uiSize);
+	arrNode.setLogicalLength(uiSize);
 	if ((es = filer->readItem(&arrNode[0], sizeof(AcGePoint2d) * uiSize)) != Acad::eOk)
 	{
 		return es;
@@ -795,7 +802,7 @@ Acad::ErrorStatus CAcDbUVGrid::dwgOutFields(AcDbDwgFiler* filer) const
 		return es;
 	}
 
-	Adesk::UInt32 sizeOfRow, sizeOfColumn;
+	double sizeOfRow, sizeOfColumn;
 	sizeOfRow = m_geUVGrid->getSizeOfRow();
 	es = filer->writeItem(sizeOfRow);
 	if (es != Acad::eOk)
@@ -949,7 +956,13 @@ CAcGeUVGrid* CAcDbUVGrid::getGeUVGrid()
 
 bool CAcDbUVGrid::setGeUVGrid(const CAcGeUVGrid* geUVGrid)
 {
+	if (!geUVGrid)
+		return false;
+
+	if (m_ownsGe)
+		SAFE_DELETE(m_geUVGrid);
 	m_geUVGrid = const_cast<CAcGeUVGrid*>(geUVGrid);
+	m_ownsGe = false;
 	return true;
 }
 
@@ -983,6 +996,7 @@ bool CAcDbUVGrid::setDbCurvePath(const AcGeCurve3d& geCurvePath)
 		m_geUVGrid->setGeCurvePath(geCurvePath);
 		return true;
 	}
+	return false;
 }
 
 bool CAcDbUVGrid::setMapPoint(double& height, double& width, double& row, AcGePoint3d & ptPoint, AcGePoint3d & pointRootStart, AcGePoint3d & pointRootEnd, AcGePoint3d & pSet)
@@ -1211,7 +1225,6 @@ bool CAcDbUVGrid::setNumbVerts(const int& input)
 		int numbSegU, numbSegV;
 		numbSegU = m_geUVGrid->getNumberSegOfU();
 		numbSegV = m_geUVGrid->getNumberSegOfV();
-		//this->setMapPoint(numbSegU, numbSegV);
 	}
 	else if (numbVerts < input)
 	{
@@ -1248,7 +1261,6 @@ bool CAcDbUVGrid::setNumbVerts(const int& input)
 		int numbSegU, numbSegV;
 		numbSegU = m_geUVGrid->getNumberSegOfU();
 		numbSegV = m_geUVGrid->getNumberSegOfV();
-		//this->setMapPoint(*geCurvePath, numbSegU, numbSegV);
 	}
 	return true;
 }

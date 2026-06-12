@@ -9,12 +9,14 @@ public:
 	CAcGeUVMap();
 	~CAcGeUVMap();
 private:
-	std::wstring m_szName;
-	std::wstring m_szGroupName;
-	std::wstring m_szBridgeName;
+	std::wstring			m_szName;
+	std::wstring			m_szGroupName;
+	std::wstring			m_szBridgeName;
 
-	CAcGeUVFace* m_geUVFace;
-	CAcGeUVGrid* m_geUVGrid;
+	CAcGeUVFace*			m_geUVFace;
+	CAcGeUVGrid*			m_geUVGrid;
+	bool					m_ownsFace;
+	bool					m_ownsGrid;
 public:
 	void setName(const std::wstring& name);
 	std::wstring getName() const;
@@ -29,7 +31,7 @@ public:
 	bool setGeUVFace(const CAcGeUVFace* geUVFace);
 
 	CAcGeUVGrid* getGeUVGrid() const;
-	bool setGeUVGrid(/*const*/ CAcGeUVGrid* geUVGrid);
+	bool setGeUVGrid(CAcGeUVGrid* geUVGrid);
 
 	void copyFrom(const CAcGeUVMap* geUVMap);
 

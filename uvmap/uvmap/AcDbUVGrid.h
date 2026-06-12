@@ -7,6 +7,18 @@
 
 class CAcDbUVGrid : public AcDbEntity
 {
+	CAcGeUVGrid*						m_geUVGrid;
+	bool								m_ownsGe; 
+	AcDbCurve*							m_dbCurve;
+	bool								m_fixed;
+	std::list<CAcDbQuadrangle2d*>		m_listQuadrangle;
+	std::list<CvGe::CvGePolygon2D>		m_listPg2d;
+	bool								m_isUVMap;
+	bool								m_alignment;
+
+protected:
+	static Adesk::UInt32 kCurrentVersionNumber;
+	virtual Acad::ErrorStatus subExplode(AcDbVoidPtrArray& entitySet) const;
 public:
 	ACRX_DECLARE_MEMBERS(CAcDbUVGrid);
 
@@ -26,7 +38,42 @@ public:
 	CAcDbUVGrid();
 	~CAcDbUVGrid();
 
-public:
+	iterator begin();
+	iterator end();
+	const_iterator begin() const;
+	const_iterator end() const;
+	void clear();
+	void pushBack(CAcDbQuadrangle2d* dbQuadrangle);
+	bool addGeQuadrangle(const CAcDbQuadrangle2d* dbQuadrangle);
+
+	CAcGeUVGrid* getGeUVGrid();
+	bool setGeUVGrid(const CAcGeUVGrid* geUVGrid);
+	void updateGeFromDb();
+	void updateDbFromGe();
+
+	AcDbCurve* getDbCurvePath();
+	bool setDbCurvePath(const AcGeCurve3d& geCurvePath);
+	bool setMapUV(double& height, double& width, double& row, AcGePoint3d& ptPoint, AcDbCurve*& dbCurvePath, AcGePoint3d& pointRootStart, AcGePoint3d& pointRootEnd, AcGePoint3d& pSet);
+	bool setMapPoint(double& height, double& width, double& row, AcGePoint3d& ptPoint, AcGePoint3d& pointRootStart, AcGePoint3d& pointRootEnd, AcGePoint3d& pSet);
+	bool setMapPointByAlignment(AcDbCurve*& dbCurve);
+	bool setMapPointUVByAlignment(AcDbPolyline*& dbPolyline, const double& height, const double& width, const int& row, const int& column);
+	bool setMapPointUVByAlignmentEx(AcDbPolyline*& dbPolyline, const double& height, const double& width, const int& row, const int& column);
+	bool setNumberSegOfU(const int& numb);
+	bool setNumberSegOfV(const int& numb);
+	void setIsUVMap(bool& isUVMap);
+	bool getIsUVMap();
+
+	bool getFixed();
+	void setFixed(bool isFixed);
+	bool getBasePoint(AcGePoint3d& basePoint);
+
+	unsigned int getNumbVerts() const;
+	bool setNumbVerts(const int& input);
+	bool getUVInGrid(const AcGePoint2d& point, double& u, double& v);
+	std::list<CAcDbQuadrangle2d*> getDbQuadrangle2d();
+	bool extendAlignment(AcDbPolyline*& dbPolyline, AcDbPolyline*& dbPolylineExtend);
+	bool setAllMapGeQuadrangle(std::list<CAcDbUVMap*>& lstDbUVMap, std::list<CAcGeUVGrid*>& lstGeUvGrip);
+
 	virtual Adesk::Boolean subWorldDraw(AcGiWorldDraw* mode);
 	virtual Acad::ErrorStatus subGetGeomExtents(AcDbExtents& extents) const;
 	virtual Acad::ErrorStatus subTransformBy(const AcGeMatrix3d& xform);
@@ -100,54 +147,4 @@ public:
 
 	virtual Acad::ErrorStatus setColorIndex(Adesk::UInt16 color,
 		Adesk::Boolean doSubents = true);
-
-protected:
-	static Adesk::UInt32 kCurrentVersionNumber;
-	virtual Acad::ErrorStatus subExplode(AcDbVoidPtrArray& entitySet) const;
-
-private:
-	CAcGeUVGrid* m_geUVGrid;
-	AcDbCurve* m_dbCurve;
-	bool m_fixed;
-	std::list<CAcDbQuadrangle2d*> m_listQuadrangle;
-	std::list<CvGe::CvGePolygon2D> m_listPg2d;
-	bool m_isUVMap;
-	bool m_alignment;
-
-public:
-	iterator begin();
-	iterator end();
-	const_iterator begin() const;
-	const_iterator end() const;
-	void clear();
-	void pushBack(CAcDbQuadrangle2d* dbQuadrangle);
-	bool addGeQuadrangle(const CAcDbQuadrangle2d* dbQuadrangle);
-
-	CAcGeUVGrid* getGeUVGrid();
-	bool setGeUVGrid(const CAcGeUVGrid* geUVGrid);
-	void updateGeFromDb();
-	void updateDbFromGe();
-
-	AcDbCurve* getDbCurvePath();
-	bool setDbCurvePath(const AcGeCurve3d& geCurvePath);
-	bool setMapUV(double& height, double& width, double& row, AcGePoint3d& ptPoint, AcDbCurve*& dbCurvePath, AcGePoint3d& pointRootStart, AcGePoint3d& pointRootEnd, AcGePoint3d& pSet);
-	bool setMapPoint(double& height, double& width, double& row, AcGePoint3d& ptPoint, AcGePoint3d& pointRootStart, AcGePoint3d& pointRootEnd, AcGePoint3d& pSet);
-	bool setMapPointByAlignment(AcDbCurve*& dbCurve);
-	bool setMapPointUVByAlignment(AcDbPolyline*& dbPolyline, const double& height, const double& width, const int& row, const int& column);
-	bool setMapPointUVByAlignmentEx(AcDbPolyline*& dbPolyline, const double& height, const double& width, const int& row, const int& column);
-	bool setNumberSegOfU(const int& numb);
-	bool setNumberSegOfV(const int& numb);
-	void setIsUVMap(bool& isUVMap);
-	bool getIsUVMap();
-
-	bool getFixed();
-	void setFixed(bool isFixed);
-	bool getBasePoint(AcGePoint3d& basePoint);
-
-	unsigned int getNumbVerts() const;
-	bool setNumbVerts(const int& input);
-	bool getUVInGrid(const AcGePoint2d& point, double& u, double& v);
-	std::list<CAcDbQuadrangle2d*> getDbQuadrangle2d();
-	bool extendAlignment(AcDbPolyline*& dbPolyline, AcDbPolyline*& dbPolylineExtend);
-	bool setAllMapGeQuadrangle(std::list<CAcDbUVMap*>& lstDbUVMap, std::list<CAcGeUVGrid*>& lstGeUvGrip);
 };

@@ -4,19 +4,25 @@
 
 CAcGeUVGrid::CAcGeUVGrid()
 {
-	m_geCurvePath = NULL;
-	m_rotateUVMap = 0;
-	m_matixUVMap = 0;
-	m_rotateFace = 0;
-	m_matixFace = 0;
-	m_arrNode = NULL;
-	m_iRow = 0;
-	m_iCol = 0;
-	m_sizeOfRow = 1;
-	m_sizeOfColumn = 1;
-	m_isEditMap = false;
-	m_columnDefaulf = 0;
-	m_fixed = false;
+	m_geCurvePath				= NULL;
+	m_rotateUVMap				= 0;
+	m_matixUVMap				= 0;
+	m_rotateFace				= 0;
+	m_matixFace					= 0;
+	m_arrNode					= NULL;
+	m_iRow						= 0;
+	m_iCol						= 0;
+	m_sizeOfRow					= 1;
+	m_sizeOfColumn				= 1;
+	m_isEditMap					= false;
+	m_columnDefaulf				= 0;
+	m_fixed						= false;
+	m_sizeU						= 0;
+	m_sizeV						= 0;
+	m_baseDistance				= 0;
+	m_numbSegU					= 0;
+	m_numbSegV					= 0;
+	m_dblength					= 0;
 }
 
 CAcGeUVGrid::~CAcGeUVGrid()
@@ -70,7 +76,6 @@ double CAcGeUVGrid::getBaseDistance() const
 void  CAcGeUVGrid::setGeCurvePath(const AcGeCurve3d& geCurve)
 {
 	SAFE_DELETE(m_geCurvePath);
-	if (!m_geCurvePath) return;
 	m_geCurvePath = (AcGeCurve3d*)geCurve.copy();
 }
 
@@ -129,7 +134,7 @@ bool CAcGeUVGrid::getPointAtUV(const double& u, const double& v, AcGePoint2d& po
 {
 	int i = std::floor(v),
 		j = std::floor(u);
-	if (i > m_iRow || j > m_iCol)
+	if (i < 0 || j < 0 || i >= m_iRow || j >= m_iCol)
 	{
 		return false;
 	}

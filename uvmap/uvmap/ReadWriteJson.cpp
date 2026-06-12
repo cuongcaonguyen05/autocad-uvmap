@@ -7,11 +7,11 @@ using namespace vizDatabase;
 
 CReadWriteJson::CReadWriteJson(void)
 {
-	numItem = 0;
-	m_currentObjectID = -1;
-	m_red = 1;
-	m_green = 0;
-	m_blue = 0;
+	m_numItem				= 0;
+	m_currentObjectID		= -1;
+	m_red					= 1;
+	m_green					= 0;
+	m_blue					= 0;
 }
 
 CReadWriteJson::~CReadWriteJson(void)
@@ -41,7 +41,7 @@ bool CReadWriteJson::append(CGeoJson* geo)
 	{
 		return false;
 	}
-	numItem++;
+	m_numItem++;
 	m_listEntities[geo->type()].push_back(geo);
 	return true;
 }
@@ -323,7 +323,6 @@ bool vizDatabase::CReadWriteJson::meshUVMap(const double& width, const double& h
 				iJs->setTexCoords(pt20);
 				iJs->setTexCoords(pt21);
 				iJs->setTexCoords(pt22);
-
 			}
 		}
 		else

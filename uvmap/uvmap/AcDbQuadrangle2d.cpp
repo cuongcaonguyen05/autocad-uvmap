@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "AcDbQuadrangle2d.h"
 
-Adesk::UInt32 CAcDbQuadrangle2d::kCurrentVersionNumber = 2;
+Adesk::UInt32 CAcDbQuadrangle2d::kCurrentVersionNumber = 1;
 
 CAcDbQuadrangle2d::CAcDbQuadrangle2d()
 {
@@ -10,7 +10,6 @@ CAcDbQuadrangle2d::CAcDbQuadrangle2d()
 
 CAcDbQuadrangle2d::~CAcDbQuadrangle2d()
 {
-	SAFE_DELETE(m_geQuadrangle2d);
 }
 
 Adesk::Boolean CAcDbQuadrangle2d::subWorldDraw(AcGiWorldDraw* mode)
@@ -89,10 +88,6 @@ Acad::ErrorStatus CAcDbQuadrangle2d::dwgInFields(AcDbDwgFiler* filer)
 	}
 	m_geQuadrangle2d->setFourthPoint(fourth);
 
-	if (version < 2)
-	{
-		return es;
-	}
 	Adesk::UInt32 dU, dV;
 	es = filer->readItem(&dU);
 	if (es != Acad::eOk)

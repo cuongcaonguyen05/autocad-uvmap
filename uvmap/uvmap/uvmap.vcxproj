@@ -179,6 +179,7 @@
     <ClCompile Include="AcGeTriangle.cpp" />
     <ClCompile Include="AcGeUVFace.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="acrxEntryPoint.cpp" />
     <ClCompile Include="uvmap_api.cpp" />
     <ClCompile Include="FeatureManager.cpp" />
     <ClCompile Include="UVMap\AutoCadUVMap.cpp" />

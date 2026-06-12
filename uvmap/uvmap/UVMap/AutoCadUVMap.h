@@ -16,7 +16,7 @@ public:
     std::string Description() const override;
     int Execute() override;
 
-	// ----- Các hàm riêng của bạn -----
+	// ----- my functions -----
     void uvmapFollowPath();
     void modelSurfaceGeometryData(std::list<CAcDbUVMap*>& lstDbUVMap);
     void modelSolidGeometryData(std::list<CAcDbUVMap*>& lstDbUVMap);
